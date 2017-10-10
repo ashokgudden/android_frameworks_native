@@ -215,6 +215,8 @@ public:
     bool authenticateSurfaceTextureLocked(
         const sp<IGraphicBufferProducer>& bufferProducer) const;
 
+    void setTranslate(int x, int y);
+
 private:
     friend class Client;
     friend class DisplayEventConnection;
