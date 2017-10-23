@@ -3915,15 +3915,14 @@ status_t SurfaceFlinger::captureScreenImplLocked(
             continue;
         }
         layer->traverseInZOrder(LayerVector::StateSet::Drawing, [&](Layer *layer) {
-            secureLayerIsVisible = false;
+            secureLayerIsVisible = secureLayerIsVisible || (layer->isVisible() &&
+                    layer->isSecure());
         });
     }
 
-    if (secureLayerIsVisible) {
-        if (!isLocalScreenshot) {
-            ALOGW("FB is protected: PERMISSION_DENIED");
-            return PERMISSION_DENIED;
-        }
+    if (!isLocalScreenshot && secureLayerIsVisible) {
+        ALOGW("FB is protected: PERMISSION_DENIED");
+        return PERMISSION_DENIED;
     }
 
     // create a surface (because we're a producer, and we need to
